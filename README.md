@@ -20,28 +20,39 @@ Der Datensatz besteht aus etwa 25.000 Farbbildern (Größe 150x150 Pixel), die i
 Das Projekt ist in zwei Hauptbereiche unterteilt:
 
 ### 1. Deep Learning (Vision Transformer)
-Anstelle von klassischen Faltungsnetzwerken (CNNs) habe ich einen **Vision Transformer (ViT)** implementiert. Die Bilder wurden in Patches unterteilt und durch die Transformer-Architektur geleitet, um globale Zusammenhänge in den Bildern besser zu verstehen. 
+Anstelle von klassischen Faltungsnetzwerken (CNNs) habe ich Transfer Learning mit einem vortrainierten **Vision Transformer (ViT-B/16)** (ImageNet-1k Gewichte) implementiert. Dabei wurde die Feature-Extraktion eingefroren und nur der finale Classification-Head auf die 6 neuen Kategorien trainiert. Das Modell wurde mit dem AdamW-Optimizer über 20 Epochen trainiert.
 
 ### 2. Klassisches Machine Learning (ML)
-Zum Vergleich habe ich die Bilddaten (z. B. durch Flattening oder das Extrahieren von Features) aufbereitet und mit mehreren traditionellen Machine Learning Algorithmen trainiert. Untersucht wurden unter anderem:
-* Support Vector Machines (SVM)
-* Random Forest
-* K-Nearest Neighbors (KNN)
-*(Passe diese Liste an die Algorithmen an, die du tatsächlich verwendet hast)*
+Für die traditionellen ML-Modelle habe ich eine eigene Feature-Extraktions-Pipeline gebaut. Die Features wurden kombiniert aus:
+* **ResNet-50 (ohne Classification-Head):** Zur Extraktion von Farbinformationen.
+* **HOG (Histogram of Oriented Gradients):** Zur Extraktion von Kanten- und Texturinformationen.
+
+Diese kombinierten Feature-Vektoren wurden dann genutzt, um drei verschiedene klassische Machine Learning Modelle zu trainieren:
+* Linear Support Vector Machine (Linear SVM)
+* RBF Support Vector Machine (RBF-SVM)
+* K-Nearest Neighbors (k-NN)
+* Random Forest (mit 300 Bäumen)
 
 ## 🛠️ Verwendete Technologien
 * **Python 3**
-* **Deep Learning:** PyTorch / Hugging Face Transformers *(oder TensorFlow/Keras – bitte anpassen)*
-* **Machine Learning:** Scikit-Learn
-* **Datenverarbeitung & Visualisierung:** NumPy, Pandas, Matplotlib, Seaborn
+* **Deep Learning:** PyTorch / Torchvision
+* **Machine Learning:** Scikit-Learn (SVC, KNeighborsClassifier, RandomForestClassifier)
+* **Bildverarbeitung:** Scikit-Image (HOG-Features, Resizing)
+* **Datenverarbeitung & Visualisierung:** NumPy, Pandas, Matplotlib, Tqdm
 
 ## 📈 Ergebnisse & Vergleich
-Hier vergleiche ich die Leistung der klassischen ML-Modelle mit der Performance des Vision Transformers.
+Der moderne Vision Transformer erzielt auf dem Test-Datensatz eine sehr hohe und robuste Genauigkeit, jedoch zeigen auch die klassischen ML-Modelle – dank der starken Feature-Extraktion durch ResNet + HOG – beachtliche Ergebnisse.
 
-* **Bester klassischer ML-Ansatz:** [Name des Modells, z.B. SVM] mit einer Genauigkeit von **XX.X%**
-* **Vision Transformer (ViT):** Genauigkeit von **XX.X%**
+**Klassisches Machine Learning:**
+* **Random Forest:** 91.70 %
+* **Linear SVM:** 90.80 %
+* **k-NN:** 92.06 % *(Hinweis: Zeigt eine hohe Test Log-Loss von 0.74, was auf Unsicherheit bei Vorhersagen hindeutet)*
+* **RBF-SVM:** **93.06 %** 🏆 *(Bestes klassisches Modell)*
 
-*(Tipp: Hier kannst du kurz in ein bis zwei Sätzen erwähnen, warum der ViT besser/schlechter war oder dass er z. B. rechenintensiver, aber genauer ist.)*
+**Deep Learning:**
+* **Vision Transformer (ViT-B/16):** **93.43 %** 🚀
+
+Der Vision Transformer übertrifft das beste klassische Modell leicht, lernt sehr schnell (stabiles Training über 20 Epochen) und zeigt in der Konfusionsmatrix eine hohe Präzision über alle Klassen hinweg.
 
 ## 🚀 So führst du den Code aus
 1. Klone dieses Repository auf deinen PC:
