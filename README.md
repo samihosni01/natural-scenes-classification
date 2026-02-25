@@ -47,13 +47,12 @@ Here are the model results on the test dataset:
 * Random Forest: 91.70%
 * Linear SVM: 90.80%
 * k-NN: 92.06% *(However, this had a rather high test loss of 0.74, making its predictions seem a bit uncertain)*
-* **RBF-SVM: 93.06%** 🏆 *(My best classical model)*
 
 **Deep Learning:**
-* **Vision Transformer (ViT-B/16): 93.43%** 🚀
+* **Vision Transformer (ViT-B/16): 92.36%** 🚀
 
 **My Conclusion:**
-In the end, the Vision Transformer (ViT) came out on top and delivered the best accuracy. This makes perfect sense for this project: I was working with a dataset of around 14,000 training images. Transformers are extremely data-hungry and can really show their strengths with these kinds of numbers. 
+In the end, the Vision Transformer (ViT) came out on top and delivered the best accuracy. This makes perfect sense for this project: I was working with a dataset of around 15,000 training images. Transformers are extremely data-hungry and can really show their strengths with these kinds of numbers. 
 
 If I had only had a few hundred images available for this project, the results would likely have been different. In that case, the ViT would probably have overfitted quickly, the loss would have increased, and the accuracy would have dropped. For very small datasets, the classical ML models (like SVM or Random Forest) with manual feature extraction would have been the better and more stable choice.
 
